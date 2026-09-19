@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Atlas político estadual: governadores eleitos, maiores bancadas das Assembleias Legislativas e mapas das eleições de 2014, 2018 e 2022." />
+  <title>Atlas Político dos Estados</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div>
+        <p class="eyebrow">Brasil · eleições estaduais</p>
+        <h1>Atlas Político dos Estados</h1>
+        <p class="subtitle">Consulta rápida: 2014 · 2018 · 2022</p>
+      </div>
+      <div class="header-meta">
+        <span class="status-pill">fase beta</span>
+        <span>Revisão: 17/09/2026</span>
+        <a href="#sobre-os-dados">Sobre os dados</a>
+        <a class="dashboard-header-button" href="dashboard/index.html">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="tabs" aria-label="Seções">
+      <button class="tab is-active" data-view="governadores" type="button">Governadores</button>
+      <button class="tab" data-view="assembleias" type="button">Assembleias Legislativas</button>
+      <button class="tab" data-view="mapas" type="button">Mapas</button>
+    </nav>
+
+    <section id="list-view">
+      <div class="section-head">
+        <div>
+          <h2 id="table-title">Governadores</h2>
+          <p id="table-help">Partido do governador eleito e coligação registrada na eleição. No detalhe, o apoio presidencial considera somente o 2º turno.</p>
+        </div>
+        <div class="list-actions">
+          <label class="search-wrap">
+            <span>Buscar UF</span>
+            <input id="state-search" type="search" placeholder="RJ, São Paulo..." autocomplete="off" />
+          </label>
+          <button id="download-csv" class="secondary-button" type="button">Baixar CSV</button>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-scroll">
+          <table class="atlas-table">
+            <colgroup>
+              <col class="col-uf" />
+              <col class="col-year" />
+              <col class="col-year" />
+              <col class="col-year" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th class="uf-col">UF</th>
+                <th>2014</th>
+                <th>2018</th>
+                <th>2022</th>
+              </tr>
+            </thead>
+            <tbody id="data-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="note" id="table-note"></p>
+    </section>
+
+    <section id="map-view" hidden>
+      <div class="section-head map-section-head">
+        <div>
+          <h2>Mapas</h2>
+          <p>Compare visualmente os resultados por eleição. Estados sem dados validados permanecem em cinza.</p>
+        </div>
+      </div>
+
+      <div class="map-controls" aria-label="Controles do mapa">
+        <fieldset class="control-group">
+          <legend>Eleição</legend>
+          <div class="segmented" id="map-year-buttons">
+            <button type="button" data-map-year="2014">2014</button>
+            <button type="button" data-map-year="2018">2018</button>
+            <button type="button" class="is-active" data-map-year="2022">2022</button>
+          </div>
+        </fieldset>
+
+        <label class="map-select-wrap">
+          <span>Colorir por</span>
+          <select id="map-mode">
+            <option value="govPartido">Governadores · partido vencedor</option>
+            <option value="govColigacao">Governadores · coligação vencedora</option>
+            <option value="assembleia">Assembleias · maior bancada</option>
+            <option value="assembleiaComposicao">Assembleias · composição por cadeiras</option>
+          </select>
+        </label>
+
+        <label class="compare-toggle">
+          <input id="compare-toggle" type="checkbox" />
+          <span>Comparar eleições</span>
+        </label>
+
+        <label id="compare-year-wrap" class="map-select-wrap compact-select" hidden>
+          <span>Comparar com</span>
+          <select id="compare-year">
+            <option value="2014">2014</option>
+            <option value="2018" selected>2018</option>
+            <option value="2022">2022</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="map-layout">
+        <div class="map-card">
+          <div id="map-status" class="map-status">Carregando a malha dos Estados…</div>
+          <div id="map-compare-grid" class="map-compare-grid">
+            <div class="map-frame">
+              <div id="map-primary-year" class="map-frame-label">2022</div>
+              <svg id="brazil-map" viewBox="0 0 620 620" role="img" aria-label="Mapa interativo do Brasil por unidades da Federação"></svg>
+            </div>
+            <div id="map-compare-frame" class="map-frame" hidden>
+              <div id="map-compare-year-label" class="map-frame-label">2018</div>
+              <svg id="brazil-map-compare" viewBox="0 0 620 620" role="img" aria-label="Mapa comparativo do Brasil por unidades da Federação"></svg>
+            </div>
+          </div>
+          <p id="compare-summary" class="compare-summary" hidden></p>
+          <p id="map-caption" class="map-caption">Clique ou toque em um Estado para ver o dado correspondente. A escala cromática usa vermelho para esquerda, cinza para centro, azul para direita e roxo para coligações/grupos ideologicamente mistos.</p>
+          <div id="ideology-key" class="ideology-key" aria-label="Escala cromática ideológica">
+            <span><i style="background:#7f1d1d"></i>Extrema esquerda</span>
+            <span><i style="background:#b91c1c"></i>Esquerda</span>
+            <span><i style="background:#e05a5a"></i>Centro-esquerda</span>
+            <span><i style="background:#8b8b8b"></i>Centro</span>
+            <span><i style="background:#6b9fd4"></i>Centro-direita</span>
+            <span><i style="background:#2f6fb2"></i>Direita</span>
+            <span><i style="background:#173f73"></i>Extrema direita</span>
+            <span><i style="background:#776a9f"></i>Grupo misto</span>
+          </div>
+        </div>
+
+        <aside class="map-detail" aria-live="polite">
+          <p class="eyebrow">Estado selecionado</p>
+          <h3 id="map-state-title">Selecione um Estado</h3>
+          <div id="map-state-content" class="map-state-content">
+            <p>O resultado da eleição selecionada aparecerá aqui.</p>
+          </div>
+          <button id="map-open-detail" class="detail-link-button" type="button" hidden>Abrir detalhes do Estado</button>
+        </aside>
+      </div>
+
+
+      <section id="seat-diagram-panel" class="seat-panel" hidden>
+        <div class="seat-panel-head">
+          <div>
+            <p class="eyebrow">Plenário eleitoral</p>
+            <h3 id="seat-diagram-title">Selecione um Estado</h3>
+          </div>
+          <p id="seat-info" class="seat-info" aria-live="polite">Cada ponto representa uma cadeira.</p>
+        </div>
+        <div class="seat-total-block" aria-live="polite">
+          <span>Total de cadeiras</span>
+          <strong id="seat-total-big">—</strong>
+        </div>
+        <div class="seat-layout">
+          <div class="seat-svg-wrap">
+            <svg id="seat-diagram" viewBox="0 0 520 285" role="img" aria-label="Composição da Assembleia Legislativa por cadeiras"></svg>
+          </div>
+          <div>
+            <h4>Legenda das cadeiras</h4>
+            <div id="seat-legend" class="seat-legend"></div>
+            <p class="seat-note">Cada ponto representa uma cadeira. Os grupos do plenário são partidos ou federações efetivamente representados; a coligação/federação com mais cadeiras permanece informada separadamente na tabela.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="legend-card">
+        <div class="legend-head">
+          <h3>Legenda</h3>
+          <span id="map-legend-context"></span>
+        </div>
+        <div id="map-legend" class="map-legend"></div>
+      </div>
+
+      <p class="note">Geometria do mapa: malha simplificada de Estados brasileiros em TopoJSON. As cores ideológicas seguem classificações acadêmicas documentadas. Na visualização de Governadores, a cor é sempre determinada pelo partido do candidato eleito; no plenário, pelo partido/federação representado. A base política exibida continua sendo validada separadamente.</p>
+    </section>
+
+    <section id="detail-view" hidden>
+      <button id="back-button" class="back-button" type="button">← Voltar</button>
+      <div class="detail-head">
+        <div>
+          <p class="eyebrow">Detalhes do Estado</p>
+          <h2 id="detail-title"></h2>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <article class="detail-card">
+          <h3>Governadores</h3>
+          <div id="detail-governadores"></div>
+        </article>
+        <article class="detail-card">
+          <h3>Assembleia Legislativa</h3>
+          <div id="detail-assembleia"></div>
+        </article>
+      </div>
+
+      <article class="detail-card sources-card">
+        <h3>Observações</h3>
+        <div id="detail-notes"></div>
+      </article>
+    </section>
+
+    <details id="sobre-os-dados" class="methodology-card">
+      <summary>Sobre os dados e a metodologia</summary>
+      <div class="methodology-content">
+        <div>
+          <h3>Leitura das tabelas</h3>
+          <p><b>Governadores:</b> partido do candidato eleito e coligação estadual registrada na eleição. O apoio presidencial exibido no detalhe considera somente o 2º turno e só é mostrado quando validado documentalmente.</p>
+          <p><b>Assembleias:</b> “maior bancada” identifica o partido/federação com mais cadeiras; isso não significa maioria absoluta. No plenário visual, as cadeiras são agrupadas pelo partido ou federação efetivamente representado em cada eleição. A coligação/federação com mais cadeiras é informada separadamente na tabela. As coligações proporcionais deixaram de ser permitidas a partir das eleições de 2020. Por isso, em 2022 o agrupamento eleitoral é feito por partido ou federação; em 2014 e 2018, a coligação proporcional é reconstruída separadamente.</p>
+        </div>
+        <div>
+          <h3>Cores</h3>
+          <p>As cores seguem exclusivamente classificações acadêmicas documentadas por surveys de especialistas. Na visualização de Governadores, a cor corresponde à ideologia do partido do candidato eleito, inclusive quando a informação exibida é a coligação. No plenário da Assembleia, cada partido ou federação é colorido conforme sua classificação acadêmica.</p>
+          <p>As cores são recursos de visualização e não expressam avaliação, preferência ou recomendação política.</p>
+        </div>
+        <div>
+          <h3>Nomenclatura e atualização</h3>
+          <p>Partidos, federações e coligações são apresentados com a denominação correspondente à eleição analisada. Mudanças posteriores de nome, incorporação ou fusão não substituem automaticamente o registro histórico.</p>
+          <p><b>Revisão do arquivo:</b> 17/09/2026.</p>
+          <div class="data-status-key" aria-label="Estados de validação dos dados">
+            <div><span class="not-applicable">—</span><span><b>Não se aplica:</b> o dado não existia ou não se aplicava àquela eleição.</span></div>
+            <div><span class="pending">Em validação</span><span><b>Em validação:</b> o dado ainda está sendo conferido.</span></div>
+            <div><span class="not-found">Não localizado</span><span><b>Não localizado:</b> a fonte consultada não forneceu o dado.</span></div>
+          </div>
+        </div>
+        <div class="sources-methodology">
+          <h3>Fontes</h3>
+          <p>Todos os links usados na base são concentrados aqui. Cada referência abre diretamente a fonte correspondente; fontes adicionais das Assembleias Legislativas ou de outros órgãos oficiais também serão incluídas nesta lista.</p>
+          <div id="methodology-source-list" class="methodology-source-list"></div>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <footer class="wrap footer">
+    <p>Ferramenta de consulta histórica. “Maior bancada” não significa maioria absoluta.</p>
+    <p class="muted">Fonte-base planejada: Tribunal Superior Eleitoral (TSE) e Assembleias Legislativas.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

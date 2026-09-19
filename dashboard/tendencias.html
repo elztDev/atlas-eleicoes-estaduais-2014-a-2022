@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atlas Político — Tendências eleitorais</title>
+  <meta name="description" content="Trocas de partido, deslocamento ideológico e trajetória das legendas nas eleições estaduais de 2014, 2018 e 2022.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23081921'/%3E%3Cpath d='M14 43 27 15l8 17 6-11 9 22' fill='none' stroke='%2338d6c7' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">AP</span>
+      <div>
+        <p class="eyebrow">ATLAS POLÍTICO DO BRASIL</p>
+        <h1>Tendências eleitorais</h1>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="edition">Eleições estaduais <strong>2014—2022</strong></div>
+      <a class="nav-link" href="index.html">← Painel principal</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="intro-row">
+      <div>
+        <p class="kicker">LEITURA COMPARADA · 2014 → 2018 → 2022</p>
+        <h2>Como o poder estadual se moveu</h2>
+      </div>
+      <p>Três eleições, 27 estados: veja onde o comando trocou de mãos, para que direção o espectro ideológico se deslocou e quais legendas se mantiveram fortes.</p>
+    </section>
+
+    <section class="kpi-grid" aria-label="Indicadores de tendência">
+      <article class="kpi"><span id="kpiFlips">—</span><p>trocas de partido no comando estadual nas duas transições</p></article>
+      <article class="kpi"><span id="kpiStable">—</span><p>UFs com o mesmo partido no governo nas três eleições</p></article>
+      <article class="kpi"><span id="kpiVolatile">—</span><p>UFs que trocaram de partido nas duas transições</p></article>
+      <article class="kpi"><span id="kpiPersistent">—</span><p>partidos venceram governos nas três eleições</p></article>
+      <article class="kpi accent"><span id="kpiIdeology">—</span><p>centro de gravidade ideológico dos governos em 2022<br><small id="kpiIdeologyDelta"></small></p></article>
+    </section>
+
+    <section class="panel ideology-panel">
+      <div class="panel-head">
+        <div>
+          <p class="section-label">ESPECTRO IDEOLÓGICO</p>
+          <h3>Composição ideológica dos governos eleitos</h3>
+        </div>
+        <span class="unit-pill">Escala esquerda–direita</span>
+      </div>
+      <div id="ideologyChart" class="diverging-chart"></div>
+      <div id="ideologyLegend" class="diverging-legend"></div>
+      <p class="microcopy">Classificação de 2018 e 2022 a partir de scores de especialistas (Bolognesi et al.); 2014 usa uma classificação histórica mais ampla em três blocos, por isso não distingue graus dentro de esquerda/direita. As cores servem só para leitura visual, não indicam juízo de valor.</p>
+    </section>
+
+    <section class="dashboard-grid trend-grid">
+      <article class="panel turnover-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">CONTINUIDADE E TROCA</p>
+            <h3>Trocas de partido no comando estadual</h3>
+          </div>
+          <span class="unit-pill">por transição eleitoral</span>
+        </div>
+        <div id="transitionStats" class="transition-stats"></div>
+        <p class="section-label" style="margin-top:22px">QUEM TROCOU EM 2022</p>
+        <div id="flipList" class="flip-list"></div>
+        <p class="microcopy">Uma troca de sigla oficial (ex.: PMDB → MDB, em 2017) conta como troca aqui, seguindo o mesmo critério do painel principal.</p>
+      </article>
+
+      <article class="panel trajectory-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">TRAJETÓRIA PARTIDÁRIA</p>
+            <h3>Governos por partido, eleição a eleição</h3>
+          </div>
+          <span class="unit-pill">as 8 maiores legendas</span>
+        </div>
+        <div id="partyTrendGrid" class="party-trend-grid"></div>
+        <p class="microcopy">MDB inclui os governos do PMDB, nome do partido até 2017.</p>
+      </article>
+    </section>
+
+    <section class="panel stability-panel">
+      <div class="panel-head">
+        <div>
+          <p class="section-label">ESTABILIDADE POR ESTADO</p>
+          <h3>Quantas vezes cada UF trocou de partido</h3>
+        </div>
+        <span class="unit-pill">27 UFs</span>
+      </div>
+      <div class="table-scroll">
+        <table id="stabilityTable">
+          <thead><tr><th>UF</th><th>2014</th><th>2018</th><th>2022</th><th>Mudanças</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Atlas Político do Brasil</strong> · Tendências eleitorais 2014–2022.</p>
+    <p>Fontes principais: Tribunal Superior Eleitoral e referências documentais indicadas na base. Revisão <span id="revisionDate">—</span>.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="trends.js"></script>
+</body>
+</html> 

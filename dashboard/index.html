@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atlas Político — Dashboard Eleitoral</title>
+  <meta name="description" content="Explore governadores e Assembleias Legislativas do Brasil nas eleições de 2014, 2018 e 2022.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23081921'/%3E%3Cpath d='M14 43 27 15l8 17 6-11 9 22' fill='none' stroke='%2338d6c7' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">AP</span>
+      <div>
+        <p class="eyebrow">ATLAS POLÍTICO DO BRASIL</p>
+        <h1>Dashboard eleitoral</h1>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <div class="edition">Eleições estaduais <strong>2014—2022</strong></div>
+      <a class="back-to-atlas" href="../index.html">Voltar</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="control-deck" aria-label="Filtros do dashboard">
+      <div class="year-switch" role="group" aria-label="Ano da eleição">
+        <button type="button" data-year="2014">2014</button>
+        <button type="button" data-year="2018">2018</button>
+        <button type="button" data-year="2022" class="active" aria-pressed="true">2022</button>
+      </div>
+      <label>Região
+        <select id="regionFilter">
+          <option value="Brasil">Brasil inteiro</option>
+          <option>Norte</option><option>Nordeste</option><option>Centro-Oeste</option><option>Sudeste</option><option>Sul</option>
+        </select>
+      </label>
+      <label>Estado
+        <select id="stateFilter"><option value="">Todas as UFs</option></select>
+      </label>
+      <label>Partido ou grupo
+        <select id="partyFilter"><option value="">Todos</option></select>
+      </label>
+      <button id="resetFilters" class="text-button" type="button">Limpar filtros</button>
+    </section>
+
+    <section class="intro-row">
+      <div>
+        <p class="kicker">PANORAMA NACIONAL · <span id="headlineYear">2022</span></p>
+        <h2>Uma leitura visual do poder estadual</h2>
+      </div>
+      <p>Compare os governos e a representação eleita nas 27 unidades da Federação.</p>
+    </section>
+
+    <section class="kpi-grid" aria-label="Indicadores nacionais">
+      <article class="kpi"><span id="kpiStates">27</span><p>UFs na seleção</p></article>
+      <article class="kpi"><span id="kpiGovParties">—</span><p>partidos nos governos</p></article>
+      <article class="kpi accent"><span id="kpiSeats">—</span><p>cadeiras estaduais</p></article>
+      <article class="kpi"><span id="kpiGroups">—</span><p>grupos representados</p></article>
+      <article class="kpi"><span id="kpiMismatch">—</span><p>UFs sem coincidência entre governo e maior bancada</p></article>
+    </section>
+
+    <section class="dashboard-grid primary-grid">
+      <article class="panel map-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">MAPA-CARTOGRAMA</p>
+            <h3 id="mapTitle">Partido do governador eleito</h3>
+          </div>
+          <div class="segmented" role="group" aria-label="Colorir mapa por">
+            <button type="button" data-mode="governor" class="active" aria-pressed="true">Governador</button>
+            <button type="button" data-mode="assembly">Maior bancada</button>
+          </div>
+        </div>
+        <div class="map-layout">
+          <div id="brazilMap" class="brazil-map" aria-label="Cartograma interativo do Brasil"></div>
+          <aside id="stateSpotlight" class="state-spotlight" aria-live="polite"></aside>
+        </div>
+        <div id="mapTooltip" class="map-tooltip" role="tooltip" hidden></div>
+        <p class="microcopy">Selecione uma UF para atualizar toda a leitura estadual. A posição das peças é um cartograma e não representa área geográfica.</p>
+      </article>
+
+      <article class="panel ranking-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">DISTRIBUIÇÃO</p>
+            <h3 id="rankingTitle">Governadores por partido</h3>
+          </div>
+          <span id="rankingUnit" class="unit-pill">governos</span>
+        </div>
+        <div id="mainRanking" class="bar-chart"></div>
+      </article>
+    </section>
+
+    <section class="panel change-panel">
+      <div class="panel-head">
+        <div>
+          <p class="section-label">TRAJETÓRIA</p>
+          <h3>Como o mapa político mudou</h3>
+        </div>
+        <button id="changesOnly" type="button" class="outline-button" aria-pressed="false">Destacar mudanças</button>
+      </div>
+      <div id="changeTimeline" class="change-timeline"></div>
+    </section>
+
+    <section class="dashboard-grid analysis-grid">
+      <article class="panel seats-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">ASSEMBLEIAS LEGISLATIVAS</p>
+            <h3>Cadeiras por partido ou federação</h3>
+          </div>
+          <span class="unit-pill">Brasil</span>
+        </div>
+        <div id="seatRanking" class="bar-chart compact"></div>
+      </article>
+      <article class="panel matrix-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">PRESENÇA TERRITORIAL</p>
+            <h3>Representação por UF</h3>
+          </div>
+          <span class="unit-pill">% das cadeiras</span>
+        </div>
+        <div id="heatmap" class="heatmap-wrap"></div>
+      </article>
+    </section>
+
+    <section class="panel state-panel">
+      <div class="state-heading">
+        <div>
+          <p class="section-label">EXPLORAR UMA UF</p>
+          <h3 id="stateTitle">Rio de Janeiro</h3>
+        </div>
+        <label>Escolha a UF
+          <select id="detailState"></select>
+        </label>
+      </div>
+      <div id="stateTimeline" class="state-timeline"></div>
+      <div class="dna-heading">
+        <div>
+          <p class="section-label">DNA DA ASSEMBLEIA</p>
+          <h4>Composição saída das urnas</h4>
+        </div>
+        <p>Cada barra representa 100% das cadeiras.</p>
+      </div>
+      <div id="assemblyDna" class="assembly-dna"></div>
+    </section>
+
+    <section class="panel compare-panel">
+      <div class="panel-head">
+        <div>
+          <p class="section-label">COMPARADOR</p>
+          <h3>Duas UFs, a mesma eleição</h3>
+        </div>
+        <div class="compare-controls">
+          <select id="compareA" aria-label="Primeira UF"></select>
+          <span aria-hidden="true">×</span>
+          <select id="compareB" aria-label="Segunda UF"></select>
+        </div>
+      </div>
+      <div id="comparison" class="comparison"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Atlas Político do Brasil</strong> · Dados eleitorais e composição saída das urnas.</p>
+    <p>Fontes principais: Tribunal Superior Eleitoral e referências documentais indicadas na base. Revisão <span id="revisionDate">—</span>.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
